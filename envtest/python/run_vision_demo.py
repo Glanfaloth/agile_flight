@@ -92,7 +92,7 @@ def main():
       
       rgb_img_tile = cv2.vconcat([cv2.hconcat(im_list_h) for im_list_h in rgb_img_list])
       cv2.imshow("rgb_img", rgb_img_tile)
-      # cv2.imwrite("./images/img_{0:05d}.png".format(frame_id), rgb_img_tile)
+      cv2.imwrite("./images/img_{0:05d}.png".format(frame_id), rgb_img_tile)
       # wait for the purpose of using open cv visualization
       cv2.waitKey(500)
 
