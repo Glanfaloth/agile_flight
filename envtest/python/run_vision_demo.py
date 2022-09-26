@@ -50,10 +50,10 @@ def main():
     env = VisionEnv_v1(dump(cfg, Dumper=RoundTripDumper), False)
     env = wrapper.FlightEnvVec(env)
 
-    ep_length = 100
+    ep_length = 100 # episode length
 
-    obs_dim = env.obs_dim
-    act_dim = env.act_dim
+    obs_dim = env.obs_dim # Observation Dimension
+    act_dim = env.act_dim # Action Dimension
     num_env = env.num_envs
 
     env.reset(random=True)
@@ -76,7 +76,7 @@ def main():
       print("sending frame id: ", frame_id, "received frame id: ", receive_frame_id)
 
       # ====== Retrive RGB Image From the simulator=========
-      raw_rgb_img =env.getImage(rgb=True) 
+      raw_rgb_img =env.getImage(rgb=True) # if rgb=False, gray
 
       num_img = raw_rgb_img.shape[0] 
       num_col = 1
