@@ -32,4 +32,6 @@ GPATH
 .history/*
 .vscode/*
 
+*.png
+*.deb
 saved
