@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 import argparse
 import math
-#
+
 import os
 import subprocess
-
 
 import numpy as np
 import torch
@@ -16,7 +15,6 @@ from stable_baselines3.ppo.policies import MlpPolicy
 from rpg_baselines.torch.common.ppo import PPO
 from rpg_baselines.torch.envs import vec_env_wrapper as wrapper
 from rpg_baselines.torch.common.util import test_policy
-
 
 def configure_random_seed(seed, env=None):
     if env is not None:
