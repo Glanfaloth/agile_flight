@@ -41,7 +41,8 @@ def main():
 
 
     # load the Unity standardalone, make sure you have downloaded it.
-    os.system(os.environ["FLIGHTMARE_PATH"] + "/flightrender/RPG_Flightmare.x86_64 &")
+    # Lanlan: commented out because we want to run unity from unity project not from standalone
+    # os.system(os.environ["FLIGHTMARE_PATH"] + "/flightrender/RPG_Flightmare.x86_64 &")
 
     # define the number of environment for parallelization simulation
     cfg["simulation"]["num_envs"] = 1 
@@ -71,7 +72,6 @@ def main():
       # A standard OpenAI gym style interface for reinforcement learning.    
       obs, rew, done, info = env.step(dummy_actions)
  
-      #
       receive_frame_id = env.render(frame_id = frame_id)
       print("sending frame id: ", frame_id, "received frame id: ", receive_frame_id)
 
@@ -111,7 +111,6 @@ def main():
       # wait for the purpose of using open cv visualization
       cv2.waitKey(500)
 
-    #
     if args.render:
         env.disconnectUnity()
 
