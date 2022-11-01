@@ -73,15 +73,13 @@ def main():
     if args.train:
         model = PPO(
             tensorboard_log=log_dir,
-            policy="MlpPolicy",
+            policy=MlpPolicy,
             policy_kwargs=dict(
                 activation_fn=torch.nn.ReLU,
                 net_arch=[dict(pi=[256, 256], vf=[512, 512])],
                 log_std_init=-0.5,
             ),
             env=train_env,
-            eval_env=eval_env,
-            use_tanh_act=True,
             gae_lambda=0.95,
             gamma=0.99,
             n_steps=250,
@@ -91,12 +89,11 @@ def main():
             batch_size=25000,
             clip_range=0.2,
             use_sde=False,  # don't use (gSDE), doesn't work
-            env_cfg=cfg,
             verbose=1,
         )
 
         #
-        model.learn(total_timesteps=int(5 * 1e7), log_interval=(10, 50))
+        model.learn(total_timesteps=int(5 * 1e7), log_interval=10)
     else:
         if args.render:
             proc = subprocess.Popen(os.environ["FLIGHTMARE_PATH"] + "/flightrender/RPG_Flightmare.x86_64")
