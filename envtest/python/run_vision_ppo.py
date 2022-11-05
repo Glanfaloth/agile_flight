@@ -47,8 +47,7 @@ def main():
         cfg["simulation"]["num_envs"] = 1 
 
     # create training environment
-    train_env = VisionEnv_v1(dump(cfg, Dumper=RoundTripDumper), False)
-    train_env = wrapper.FlightEnvVec(train_env)
+    train_env = wrapper.FlightEnvVec(VisionEnv_v1(dump(cfg, Dumper=RoundTripDumper), False))
 
     # set random seed
     configure_random_seed(args.seed, env=train_env)
@@ -80,6 +79,8 @@ def main():
                 log_std_init=-0.5,
             ),
             env=train_env,
+            eval_env=eval_env,
+            use_tanh_act=True,
             gae_lambda=0.95,
             gamma=0.99,
             n_steps=250,
@@ -89,11 +90,12 @@ def main():
             batch_size=25000,
             clip_range=0.2,
             use_sde=False,  # don't use (gSDE), doesn't work
+            env_cfg=cfg,
             verbose=1,
         )
 
         #
-        model.learn(total_timesteps=int(5 * 1e7), log_interval=10)
+        model.learn(total_timesteps=int(5 * 1e7), log_interval=(10, 50))
     else:
         if args.render:
             proc = subprocess.Popen(os.environ["FLIGHTMARE_PATH"] + "/flightrender/RPG_Flightmare.x86_64")
