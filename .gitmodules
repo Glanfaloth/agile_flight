@@ -1,6 +1,3 @@
-[submodule "flightmare"]
-	path = flightmare
-	url = git@github.com:uzh-rpg/flightmare.git
 [submodule "catkin_simple"]
 	path = catkin_simple
 	url = https://github.com/catkin/catkin_simple
