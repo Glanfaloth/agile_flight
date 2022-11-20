@@ -48,7 +48,7 @@ conda env create -f environment.yaml
 
 # 
 echo "Source the anaconda environment. If errors, change to the right anaconda path."
-source ~/anaconda3/etc/profile.d/conda.sh
+source ~/miniconda3/etc/profile.d/conda.sh
 
 # 
 echo "Actiavte the environment"
