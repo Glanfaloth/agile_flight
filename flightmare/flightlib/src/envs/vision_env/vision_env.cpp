@@ -50,6 +50,9 @@ void VisionEnv::init() {
   // create quadrotors
   quad_ptr_ = std::make_shared<Quadrotor>();
 
+  // set the quadrotor size
+  quad_ptr_->setSize(Vector(0.1, 0.1, 0.1));
+
   // update dynamics
   QuadrotorDynamics dynamics;
   dynamics.updateParams(cfg_);
