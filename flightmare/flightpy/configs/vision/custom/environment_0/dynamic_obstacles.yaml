@@ -1,0 +1,188 @@
+N: 11
+Object1:
+  csvtraj: traj_0
+  loop: false
+  position:
+  - 1.58926515
+  - -0.75203689
+  - 0.0643407
+  prefab: human_0
+  rotation:
+  - 0
+  - 0
+  - 0
+  - 0
+  scale:
+  - 1
+  - 1
+  - 1
+Object2:
+  csvtraj: traj_1
+  loop: false
+  position:
+  - 1.19147246
+  - -0.50355666
+  - 0.0446171 
+  prefab: human_1
+  rotation:
+  - 0
+  - 0
+  - 0
+  - 0
+  scale:
+  - 1
+  - 1
+  - 1
+Object3:
+  csvtraj: traj_2
+  loop: false
+  position:
+  - 0.4670439
+  - 0.2457282
+  - 0.07593223
+  prefab: human_2
+  rotation:
+  - 0
+  - 0
+  - 0
+  - 0
+  scale:
+  - 1
+  - 1
+  - 1
+Object4:
+  csvtraj: traj_3
+  loop: false
+  position:
+  - 0.20956916
+  - -0.92250969
+  - 0.01800581
+  prefab: human_3
+  rotation:
+  - 0
+  - 0
+  - 0
+  - 0
+  scale:
+  - 1
+  - 1
+  - 1
+Object5:
+  csvtraj: traj_4
+  loop: false
+  position:
+  - -0.26984519
+  - -1.11702734
+  - 0.15880878
+  prefab: human_4
+  rotation:
+  - 0
+  - 0
+  - 0
+  - 0
+  scale:
+  - 1
+  - 1
+  - 1
+Object6:
+  csvtraj: traj_5
+  loop: false
+  position:
+  - -0.08461298
+  - -0.3703809
+  - -0.36622512
+  prefab: human_5
+  rotation:
+  - 0
+  - 0
+  - 0
+  - 0
+  scale:
+  - 1
+  - 1
+  - 1
+Object7:
+  csvtraj: traj_6
+  loop: false
+  position:
+  - 0.73347059
+  - -1.66394425
+  - 0.04813612
+  prefab: human_6
+  rotation:
+  - 0
+  - 0
+  - 0
+  - 0
+  scale:
+  - 1
+  - 1
+  - 1
+Object8:
+  csvtraj: traj_7
+  loop: false
+  position:
+  - 0.97756107
+  - 0.18696481
+  - 0.04993001
+  prefab: human_7
+  rotation:
+  - 0
+  - 0
+  - 0
+  - 0
+  scale:
+  - 1
+  - 1
+  - 1
+Object9:
+  csvtraj: traj_8
+  loop: false
+  position:
+  - -0.39181694
+  - 0.45460334
+  - -0.29157543
+  prefab: human_8
+  rotation:
+  - 0
+  - 0
+  - 0
+  - 0
+  scale:
+  - 1
+  - 1
+  - 1
+Object10:
+  csvtraj: traj_9
+  loop: false
+  position:
+  - 1.30077235
+  - 0.13453372
+  - 0.06898338
+  prefab: human_9
+  rotation:
+  - 0
+  - 0
+  - 0
+  - 0
+  scale:
+  - 1
+  - 1
+  - 1
+Object11:
+  csvtraj: traj_scene
+  loop: false
+  position:
+  - 0.34290952
+  - -0.45277571
+  - -0.42194323
+  prefab: scene_mesh
+  rotation:
+  - 0
+  - 0
+  - 0
+  - 0
+  scale:
+  - 1
+  - 1
+  - 1

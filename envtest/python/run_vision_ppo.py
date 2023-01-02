@@ -98,7 +98,7 @@ def main():
         model.learn(total_timesteps=int(5 * 1e7), log_interval=(10, 50))
     else:
         if args.render:
-            proc = subprocess.Popen(os.environ["FLIGHTMARE_PATH"] + "/flightrender/RPG_Flightmare.x86_64")
+            proc = subprocess.Popen(os.environ["FLIGHTMARE_PATH"] + "/flightrender/RPG_Flightmare_g.x86_64")
         
         weight = rsg_root + "/saved/PPO_{0}/Policy/iter_{1:05d}.pth".format(args.trial, args.iter)
         env_rms = rsg_root +"/saved/PPO_{0}/RMS/iter_{1:05d}.npz".format(args.trial, args.iter)
@@ -114,11 +114,11 @@ def main():
         policy.to(device)
         # 
         eval_env.load_rms(env_rms)
+        
         test_policy(eval_env, policy, render=args.render)
 
         if args.render:
             proc.terminate()
-
 
 if __name__ == "__main__":
     main()
