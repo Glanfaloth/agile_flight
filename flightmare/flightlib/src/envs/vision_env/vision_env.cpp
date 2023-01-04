@@ -50,8 +50,9 @@ void VisionEnv::init() {
   // create quadrotors
   quad_ptr_ = std::make_shared<Quadrotor>();
 
-  // set the quadrotor size
-  quad_ptr_->setSize(Vector(0.1, 0.1, 0.1));
+  // // set the quadrotor size
+  // Vector<3> quad_size = Vector<3>(0.1, 0.1, 0.1);
+  // quad_ptr_->setSize(quad_size);
 
   // update dynamics
   QuadrotorDynamics dynamics;
@@ -455,6 +456,7 @@ bool VisionEnv::loadParam(const YAML::Node &cfg) {
 
   if (cfg["rewards"]) {
     // load reward coefficients for reinforcement learning
+    bound_coeff_ = cfg["rewards"]["bound_coeff"].as<Scalar>();
     vel_coeff_ = cfg["rewards"]["vel_coeff"].as<Scalar>();
     collision_coeff_ = cfg["rewards"]["collision_coeff"].as<Scalar>();
     angular_vel_coeff_ = cfg["rewards"]["angular_vel_coeff"].as<Scalar>();
