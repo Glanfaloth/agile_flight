@@ -116,8 +116,8 @@ bool VisionEnv::reset(Ref<Vector<>> obs) {
   // randomly reset the quadrotor state
   // reset position
   quad_state_.x(QS::POSX) = uniform_dist_(random_gen_);
-  quad_state_.x(QS::POSY) = uniform_dist_(random_gen_) * 9.0;
-  quad_state_.x(QS::POSZ) = uniform_dist_(random_gen_) * 4 + 5.0;
+  quad_state_.x(QS::POSY) = uniform_dist_(random_gen_);
+  quad_state_.x(QS::POSZ) = uniform_dist_(random_gen_);
 
   // reset quadrotor with random states
   quad_ptr_->reset(quad_state_);
@@ -155,8 +155,8 @@ bool VisionEnv::getObs(Ref<Vector<>> obs) {
 }
 
 bool VisionEnv::getObstacleState(Ref<Vector<>> obs_state) {
-  if (dynamic_objects_.size() <= 0 || static_objects_.size() <= 0) {
-    logger_.error("No dynamic or static obstacles.");
+  if (dynamic_objects_.size() <= 0 && static_objects_.size() <= 0) {
+    logger_.error("No dynamic and static obstacles.");
     return false;
   }
   // make sure to reset the collision penalty
@@ -182,7 +182,7 @@ bool VisionEnv::getObstacleState(Ref<Vector<>> obs_state) {
     relative_pos_norm_.push_back(obstacle_dist);
 
     // store the obstacle radius
-    Scalar obs_radius = dynamic_objects_[i]->getScale()[0] / 2;
+    Scalar obs_radius = dynamic_objects_[i]->getScale().minCoeff() / 2;
     obstacle_radius_.push_back(obs_radius);
 
     //
@@ -191,28 +191,29 @@ bool VisionEnv::getObstacleState(Ref<Vector<>> obs_state) {
     }
   }
 
-  // compute relatiev distance to static obstacles
-  for (int i = 0; i < (int)static_objects_.size(); i++) {
-    // compute relative position vector
-    Vector<3> delta_pos = static_objects_[i]->getPos() - quad_state_.p;
-    relative_pos.push_back(delta_pos);
+  // // compute relatiev distance to static obstacles
+  // for (int i = 0; i < (int)static_objects_.size(); i++) {
+  //   // compute relative position vector
+  //   Vector<3> delta_pos = static_objects_[i]->getPos() - quad_state_.p;
+  //   relative_pos.push_back(delta_pos);
 
 
-    // compute relative distance
-    Scalar obstacle_dist = delta_pos.norm();
-    if (obstacle_dist > max_detection_range_) {
-      obstacle_dist = max_detection_range_;
-    }
-    relative_pos_norm_.push_back(obstacle_dist);
+  //   // compute relative distance
+  //   Scalar obstacle_dist = delta_pos.norm();
+  //   if (obstacle_dist > max_detection_range_) {
+  //     obstacle_dist = max_detection_range_;
+  //   }
+  //   relative_pos_norm_.push_back(obstacle_dist);
 
-    // store the obstacle radius
-    Scalar obs_radius = static_objects_[i]->getScale()[0] / 2;
-    obstacle_radius_.push_back(obs_radius);
+  //   // store the obstacle radius
+  //   // TODO: don't regard objects as spheres
+  //   Scalar obs_radius = static_objects_[i]->getScale().minCoeff() / 2;
+  //   obstacle_radius_.push_back(obs_radius);
 
-    if (obstacle_dist < obs_radius) {
-      is_collision_ = true;
-    }
-  }
+  //   if (obstacle_dist < obs_radius) {
+  //     is_collision_ = true;
+  //   }
+  // }
 
   // std::cout << relative_pos_norm_ << std::endl;
   size_t idx = 0;
@@ -343,14 +344,19 @@ bool VisionEnv::computeReward(Ref<Vector<>> reward) {
 }
 
 bool VisionEnv::isTerminalState(Scalar &reward) {
-  // if (is_collision_) {
-  //   reward = -1.0;
-  //   return true;
-  // }
+  if (is_collision_) {
+    reward = -1.0;
+    return true;
+  }
 
   // simulation time out
   if (cmd_.t >= max_t_ - sim_dt_) {
-    reward = 0.0;
+    reward = -1.0;
+    return true;
+  }
+
+  if (quad_state_.x(QS::POSX >= 60)) {
+    reward = 1.0;
     return true;
   }
 
