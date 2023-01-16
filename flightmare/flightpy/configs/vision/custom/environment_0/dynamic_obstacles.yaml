@@ -6,7 +6,7 @@ Object1:
   - 1.58926515
   - -0.75203689
   - 0.0643407
-  prefab: human_0
+  prefab: human_0_t
   rotation:
   - 0
   - 0
@@ -22,8 +22,8 @@ Object2:
   position:
   - 1.19147246
   - -0.50355666
-  - 0.0446171 
-  prefab: human_1
+  - 0.0446171
+  prefab: human_1_t
   rotation:
   - 0
   - 0
@@ -40,7 +40,7 @@ Object3:
   - 0.4670439
   - 0.2457282
   - 0.07593223
-  prefab: human_2
+  prefab: human_2_t
   rotation:
   - 0
   - 0
@@ -57,7 +57,7 @@ Object4:
   - 0.20956916
   - -0.92250969
   - 0.01800581
-  prefab: human_3
+  prefab: human_3_t
   rotation:
   - 0
   - 0
@@ -74,7 +74,7 @@ Object5:
   - -0.26984519
   - -1.11702734
   - 0.15880878
-  prefab: human_4
+  prefab: human_4_t
   rotation:
   - 0
   - 0
@@ -91,7 +91,7 @@ Object6:
   - -0.08461298
   - -0.3703809
   - -0.36622512
-  prefab: human_5
+  prefab: human_5_t
   rotation:
   - 0
   - 0
@@ -108,7 +108,7 @@ Object7:
   - 0.73347059
   - -1.66394425
   - 0.04813612
-  prefab: human_6
+  prefab: human_6_t
   rotation:
   - 0
   - 0
@@ -125,7 +125,7 @@ Object8:
   - 0.97756107
   - 0.18696481
   - 0.04993001
-  prefab: human_7
+  prefab: human_7_t
   rotation:
   - 0
   - 0
@@ -142,7 +142,7 @@ Object9:
   - -0.39181694
   - 0.45460334
   - -0.29157543
-  prefab: human_8
+  prefab: human_8_t
   rotation:
   - 0
   - 0
@@ -159,7 +159,7 @@ Object10:
   - 1.30077235
   - 0.13453372
   - 0.06898338
-  prefab: human_9
+  prefab: human_9_t
   rotation:
   - 0
   - 0
@@ -176,7 +176,7 @@ Object11:
   - 0.34290952
   - -0.45277571
   - -0.42194323
-  prefab: scene_mesh
+  prefab: scene_mesh_t
   rotation:
   - 0
   - 0
