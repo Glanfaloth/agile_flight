@@ -366,7 +366,7 @@ bool VisionEnv::computeReward(Ref<Vector<>> reward) {
   }
 
   // - tracking a constant linear velocity ..should be called lin_vel_penalty
-  Scalar lin_vel_reward =
+  Scalar lin_vel_penalty =
     vel_coeff_ * (quad_state_.v - goal_linear_vel_).norm();
 
   // - angular velocity penalty, to avoid oscillations
@@ -390,11 +390,11 @@ bool VisionEnv::computeReward(Ref<Vector<>> reward) {
 
   //  change progress reward as survive reward
   const Scalar total_reward =
-    lin_vel_reward + collision_penalty + ang_vel_penalty + survive_rew_ + goal_reward + world_reward;
+    lin_vel_penalty + collision_penalty + ang_vel_penalty + survive_rew_ + goal_reward + world_reward;
 
   // return all reward components for debug purposes
   // only the total reward is used by the RL algorithm
-  reward << lin_vel_reward, collision_penalty, ang_vel_penalty, survive_rew_,
+  reward << lin_vel_penalty, collision_penalty, ang_vel_penalty, survive_rew_,
     total_reward;
   return true;
 }

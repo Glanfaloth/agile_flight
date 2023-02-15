@@ -228,7 +228,6 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             _, values, _ = self.policy.forward(obs_tensor)
 
         rollout_buffer.compute_returns_and_advantage(last_values=values, dones=dones)
-
         callback.on_rollout_end()
 
         return True

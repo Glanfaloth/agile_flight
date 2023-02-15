@@ -1,4 +1,4 @@
-N: 11
+N: 31
 Object1:
   csvtraj: traj_0
   loop: false
@@ -16,6 +16,13 @@ Object1:
   - 1
   - 1
   - 1
+  boundingbox:
+  - 1.8571
+  - -1.0307
+  - -1.0872
+  - 1.3541
+  - -0.496
+  - 0.5708
 Object2:
   csvtraj: traj_1
   loop: false
@@ -33,6 +40,13 @@ Object2:
   - 1
   - 1
   - 1
+  boundingbox:
+  - 1.4899
+  - -0.7968
+  - -1.0938
+  - 0.8605
+  - -0.2285
+  - 0.5471
 Object3:
   csvtraj: traj_2
   loop: false
@@ -50,6 +64,13 @@ Object3:
   - 1
   - 1
   - 1
+  boundingbox:
+  - 0.7067
+  - 0.07
+  - -1.0764
+  - 0.1155
+  - 0.6125
+  - 0.5485
 Object4:
   csvtraj: traj_3
   loop: false
@@ -67,6 +88,13 @@ Object4:
   - 1
   - 1
   - 1
+  boundingbox:
+  - 0.4824
+  - -1.1417
+  - -1.0896
+  - -0.1221
+  - -0.589
+  - 0.5041
 Object5:
   csvtraj: traj_4
   loop: false
@@ -84,6 +112,13 @@ Object5:
   - 1
   - 1
   - 1
+  boundingbox:
+  - 0.0202
+  - -1.4551
+  - -0.7429
+  - -0.5347
+  - -0.8441
+  - 0.5885
 Object6:
   csvtraj: traj_5
   loop: false
@@ -101,6 +136,13 @@ Object6:
   - 1
   - 1
   - 1
+  boundingbox:
+  - 0.3161
+  - -0.769
+  - -1.0851
+  - -0.5329
+  - -0.0633
+  - -0.0075
 Object7:
   csvtraj: traj_6
   loop: false
@@ -118,6 +160,13 @@ Object7:
   - 1
   - 1
   - 1
+  boundingbox:
+  - 0.9725
+  - -1.9579
+  - -1.0979
+  - 0.199
+  - -1.3681
+  - 0.5543
 Object8:
   csvtraj: traj_7
   loop: false
@@ -135,6 +184,13 @@ Object8:
   - 1
   - 1
   - 1
+  boundingbox:
+  - 1.2079
+  - -0.041
+  - -1.0757
+  - 0.7114
+  - 0.4391
+  - 0.5534
 Object9:
   csvtraj: traj_8
   loop: false
@@ -152,6 +208,13 @@ Object9:
   - 1
   - 1
   - 1
+  boundingbox:
+  - 0.0625
+  - 0.0462
+  - -1.1268
+  - -0.7316
+  - 0.9349
+  - 0.1084
 Object10:
   csvtraj: traj_9
   loop: false
@@ -169,7 +232,518 @@ Object10:
   - 1
   - 1
   - 1
+  boundingbox:
+  - 1.5666
+  - -0.1146
+  - -1.0684
+  - 1.0405
+  - 0.4171
+  - 0.5729
 Object11:
+  csvtraj: traj_scene_0
+  loop: false
+  position:
+  - -0.43511607
+  - -2.9622676
+  - -0.6268454
+  prefab: scene_0
+  rotation:
+  - 0
+  - 0
+  - 0
+  - 0
+  scale:
+  - 1
+  - 1
+  - 1
+  boundingbox:
+  - -0.0058
+  - -3.3158
+  - -0.8755
+  - -0.7422
+  - -2.5938
+  - -0.3882
+Object12:
+  csvtraj: traj_scene_1
+  loop: false
+  position:
+  - 1.81585922
+  - -1.15486332
+  - -0.64421958
+  prefab: scene_1
+  rotation:
+  - 0
+  - 0
+  - 0
+  - 0
+  scale:
+  - 1
+  - 1
+  - 1
+  boundingbox:
+  - 2.1867
+  - -1.5139
+  - -0.9995
+  - 1.4439
+  - -0.7868
+  - -0.3792
+Object13:
+  csvtraj: traj_scene_2
+  loop: false
+  position:
+  - 1.39547418
+  - 0.69368152
+  - -0.61365706
+  prefab: scene_2
+  rotation:
+  - 0
+  - 0
+  - 0
+  - 0
+  scale:
+  - 1
+  - 1
+  - 1
+  boundingbox:
+  - 1.8023
+  - 0.3303
+  - -1.0197
+  - 1.0349
+  - 1.1241
+  - -0.3507
+Object14:
+  csvtraj: traj_scene_3
+  loop: false
+  position:
+  - 1.8035496448537025
+  - -0.13927160312320233
+  - -0.5241814786177039
+  prefab: scene_3
+  rotation:
+  - 0
+  - 0
+  - 0
+  - 0
+  scale:
+  - 1
+  - 1
+  - 1
+  boundingbox:
+  - 2.186
+  - -0.6553
+  - -1.0593
+  - 1.3351
+  - 0.2252
+  - 0.0798
+Object15:
+  csvtraj: traj_scene_4
+  loop: false
+  position:
+  - 0.724162520244777
+  - -0.06116022122139635
+  - -0.6185156009570661
+  prefab: scene_4
+  rotation:
+  - 0
+  - 0
+  - 0
+  - 0
+  scale:
+  - 1
+  - 1
+  - 1
+  boundingbox:
+  - 1.0833
+  - -0.4504
+  - -0.8603
+  - 0.363
+  - 0.2946
+  - -0.5193
+Object16:
+  csvtraj: traj_scene_5
+  loop: false
+  position:
+  - -0.3992472524223088
+  - -0.7351390958552942
+  - -0.6719908687513
+  prefab: scene_5
+  rotation:
+  - 0
+  - 0
+  - 0
+  - 0
+  scale:
+  - 1
+  - 1
+  - 1
+  boundingbox:
+  - 0.0795
+  - -1.7699
+  - -1.1
+  - -1.2822
+  - 0.6201
+  - -0.4013
+Object17:
+  csvtraj: traj_scene_6
+  loop: false
+  position:
+  - 0.7270937875148276
+  - -0.9026344754167901
+  - -0.7296094677787943
+  prefab: scene_6
+  rotation:
+  - 0
+  - 0
+  - 0
+  - 0
+  scale:
+  - 1
+  - 1
+  - 1
+  boundingbox:
+  - 1.0814
+  - -1.2293
+  - -0.8943
+  - 0.4115
+  - -0.5063
+  - -0.6634
+Object18:
+  csvtraj: traj_scene_7
+  loop: false
+  position:
+  - 0.17314713006876262
+  - 1.2664118684626446
+  - -0.6300479008176946
+  prefab: scene_7
+  rotation:
+  - 0
+  - 0
+  - 0
+  - 0
+  scale:
+  - 1
+  - 1
+  - 1
+  boundingbox:
+  - 0.691
+  - 1.1184
+  - -0.7589
+  - -0.3693
+  - 1.454
+  - -0.5679
+Object19:
+  csvtraj: traj_scene_8
+  loop: false
+  position:
+  - 0.13937663388698326
+  - 1.4885145383158613
+  - -0.0165757593686796
+  prefab: scene_8
+  rotation:
+  - 0
+  - 0
+  - 0
+  - 0
+  scale:
+  - 1
+  - 1
+  - 1
+  boundingbox:
+  - 0.5596
+  - 1.3199
+  - -0.6119
+  - -0.3385
+  - 1.6956
+  - 0.6196
+Object20:
+  csvtraj: traj_scene_9
+  loop: false
+  position:
+  - -1.4289341613278665
+  - -1.662912630449232
+  - -0.11392113793288601
+  prefab: scene_9
+  rotation:
+  - 0
+  - 0
+  - 0
+  - 0
+  scale:
+  - 1
+  - 1
+  - 1
+  boundingbox:
+  - -1.3273
+  - -2.4211
+  - -0.6513
+  - -1.5795
+  - -0.0987
+  - 0.6925
+Object21:
+  csvtraj: traj_scene_10
+  loop: false
+  position:
+  - 1.744456749067343
+  - 1.2978170918871563
+  - -0.32479231428391864
+  prefab: scene_10
+  rotation:
+  - 0
+  - 0
+  - 0
+  - 0
+  scale:
+  - 1
+  - 1
+  - 1
+  boundingbox:
+  - 1.9981
+  - 1.1295
+  - -0.5265
+  - 1.4939
+  - 1.4804
+  - -0.1776
+Object22:
+  csvtraj: traj_scene_11
+  loop: false
+  position:
+  - -0.5167686178727937
+  - 0.06746925228916485
+  - -0.5292215508632852
+  prefab: scene_11
+  rotation:
+  - 0
+  - 0
+  - 0
+  - 0
+  scale:
+  - 1
+  - 1
+  - 1
+  boundingbox:
+  - -0.3313
+  - -0.1467
+  - -0.7051
+  - -0.7325
+  - 0.3088
+  - -0.3588
+Object23:
+  csvtraj: traj_scene_12
+  loop: false
+  position:
+  - -0.4036653753302976
+  - 1.0462354429002656
+  - -0.40497760434453867
+  prefab: scene_12
+  rotation:
+  - 0
+  - 0
+  - 0
+  - 0
+  scale:
+  - 1
+  - 1
+  - 1
+  boundingbox:
+  - -0.1666
+  - 0.8533
+  - -1.0595
+  - -0.6413
+  - 1.3515
+  - 0.387
+Object24:
+  csvtraj: traj_scene_13
+  loop: false
+  position:
+  - -1.1652624072186357
+  - -0.5960446123540777
+  - -0.1962026175129088
+  prefab: scene_13
+  rotation:
+  - 0
+  - 0
+  - 0
+  - 0
+  scale:
+  - 1
+  - 1
+  - 1
+  boundingbox:
+  - -1.0225
+  - -1.1661
+  - -0.6397
+  - -1.4711
+  - -0.0952
+  - 0.2958
+Object25:
+  csvtraj: traj_scene_14
+  loop: false
+  position:
+  - 0.7544480738184962
+  - 1.098067799815578
+  - -0.5620383488923664
+  prefab: scene_14
+  rotation:
+  - 0
+  - 0
+  - 0
+  - 0
+  scale:
+  - 1
+  - 1
+  - 1
+  boundingbox:
+  - 1.0276
+  - 0.9263
+  - -1.0396
+  - 0.4792
+  - 1.4059
+  - -0.2003
+Object26:
+  csvtraj: traj_scene_15
+  loop: false
+  position:
+  - 1.2157106658342676
+  - 1.3433758811651058
+  - -0.19387943977182745
+  prefab: scene_15
+  rotation:
+  - 0
+  - 0
+  - 0
+  - 0
+  scale:
+  - 1
+  - 1
+  - 1
+  boundingbox:
+  - 1.6652
+  - 1.1492
+  - -0.6096
+  - 0.8673
+  - 1.4632
+  - 0.1527
+Object27:
+  csvtraj: traj_scene_16
+  loop: false
+  position:
+  - -1.1719208699489023
+  - -1.3263131044749767
+  - -0.49385204520076514
+  prefab: scene_16
+  rotation:
+  - 0
+  - 0
+  - 0
+  - 0
+  scale:
+  - 1
+  - 1
+  - 1
+  boundingbox:
+  - -1.0635
+  - -1.5076
+  - -0.6513
+  - -1.3299
+  - -1.1327
+  - -0.3075
+Object28:
+  csvtraj: traj_scene_17
+  loop: false
+  position:
+  - -1.1530488298139987
+  - -0.8932684973269092
+  - -0.6695607678344312
+  prefab: scene_17
+  rotation:
+  - 0
+  - 0
+  - 0
+  - 0
+  scale:
+  - 1
+  - 1
+  - 1
+  boundingbox:
+  - -1.033
+  - -2.113
+  - -0.8094
+  - -1.4273
+  - 0.8366
+  - -0.5778
+Object29:
+  csvtraj: traj_scene_18
+  loop: false
+  position:
+  - -1.4660689635318085
+  - 0.5178584157180101
+  - 0.017307663250978305
+  prefab: scene_18
+  rotation:
+  - 0
+  - 0
+  - 0
+  - 0
+  scale:
+  - 1
+  - 1
+  - 1
+  boundingbox:
+  - -1.4088
+  - -1.3519
+  - -0.5805
+  - -1.5135
+  - 0.9685
+  - 0.6821
+Object30:
+  csvtraj: traj_scene_19
+  loop: false
+  position:
+  - -1.2377380031681917
+  - -1.3043469236870557
+  - -0.3671471953135112
+  prefab: scene_19
+  rotation:
+  - 0
+  - 0
+  - 0
+  - 0
+  scale:
+  - 1
+  - 1
+  - 1
+  boundingbox:
+  - -1.1483
+  - -1.3833
+  - -0.459
+  - -1.3299
+  - -1.2068
+  - -0.3011
+# Object31:
+#   csvtraj: traj_box
+#   loop: false
+#   position:
+#   - 3
+#   - 0
+#   - 0
+#   prefab: rpg_box01
+#   rotation:
+#   - 0
+#   - 0
+#   - 0
+#   - 0
+#   scale:
+#   - 0.1
+#   - 0.1
+#   - 0.1
+#   boundingbox:
+#   - 2.9
+#   - -0.1
+#   - 0.1
+#   - 3.1
+#   - -0.1
+#   - 0.1
+Object31:
   csvtraj: traj_scene
   loop: false
   position:
@@ -186,3 +760,10 @@ Object11:
   - 1
   - 1
   - 1
+  boundingbox:
+  - -2
+  - -2
+  - -2
+  - -2
+  - -2
+  - -2
