@@ -18,6 +18,7 @@ class UnityObject {
   virtual Quaternion getQuat(void) { return state_.q(); };
   virtual Vector<3> getSize(void) { return size_; };
   virtual Vector<3> getScale(void) { return scale_; };
+  virtual Vector<6> getBoundingBox(void) {return bounding_box_; };
 
   // public get functions
   const std::string getID(void) { return id_; };
@@ -33,11 +34,13 @@ class UnityObject {
   };
   inline void setSize(const Vector<3>& size) { size_ = size; };
   inline void setScale(const Vector<3>& scale) { scale_ = scale; };
-
+  inline void setBoundingBox(const Vector<6>& bounding_box) { bounding_box_ = bounding_box; };
 
  protected:
   const std::string id_;
   const std::string prefab_id_;
+
+  Vector<6> bounding_box_; // minx miny minz maxx maxy maxz
 
   Scalar sign_;
 

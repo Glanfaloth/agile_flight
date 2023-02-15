@@ -35,7 +35,7 @@ enum Vision : int {
 
   // observations
   kObs = 0,
-  kNObs = 15 + kNObstacles * kNObstaclesState,
+  kNObs = 15 + kNObstacles * kNObstaclesState, // 15 is for goal linear velocity (3) orientation matrix (9) quad velocity (3)
 
   // control actions
   kAct = 0,
@@ -121,13 +121,14 @@ class VisionEnv final : public EnvBase {
   Logger logger_{"VisionEnv"};
 
   // Define reward for training
-  Scalar bound_coeff_, vel_coeff_, collision_coeff_, angular_vel_coeff_, survive_rew_;
+  Scalar vel_coeff_, collision_coeff_, angular_vel_coeff_, survive_rew_;
   Vector<3> goal_linear_vel_;
   bool is_collision_;
 
   // max detection range (meter)
   Scalar max_detection_range_;
   std::vector<Scalar> relative_pos_norm_;
+  std::vector<Vector<6>> box_positions_;
   std::vector<Scalar> obstacle_radius_;
 
 

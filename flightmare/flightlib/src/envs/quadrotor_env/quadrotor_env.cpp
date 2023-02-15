@@ -40,7 +40,7 @@ void QuadrotorEnv::init() {
   // define a bounding box {xmin, xmax, ymin, ymax, zmin, zmax}
   world_box_ << -20, 20, -20, 20, -0.0, 20;
   if (!quad_ptr_->setWorldBox(world_box_)) {
-    logger_.error("cannot set wolrd box");
+    logger_.error("cannot set world box");
   };
 
   // define input and output dimension for the environment

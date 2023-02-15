@@ -59,7 +59,6 @@ void VisionEnv::init() {
   dynamics.updateParams(cfg_);
   quad_ptr_->updateDynamics(dynamics);
 
-
   // define input and output dimension for the environment
   obs_dim_ = visionenv::kNObs;
   act_dim_ = visionenv::kNAct;
@@ -115,9 +114,9 @@ bool VisionEnv::reset(Ref<Vector<>> obs) {
 
   // randomly reset the quadrotor state
   // reset position
-  quad_state_.x(QS::POSX) = uniform_dist_(random_gen_);
-  quad_state_.x(QS::POSY) = uniform_dist_(random_gen_);
-  quad_state_.x(QS::POSZ) = uniform_dist_(random_gen_);
+  quad_state_.x(QS::POSX) = -2;
+  quad_state_.x(QS::POSY) = 0.5 * uniform_dist_(random_gen_);
+  quad_state_.x(QS::POSZ) = 0.5 * uniform_dist_(random_gen_);
 
   // reset quadrotor with random states
   quad_ptr_->reset(quad_state_);
@@ -161,16 +160,45 @@ bool VisionEnv::getObstacleState(Ref<Vector<>> obs_state) {
   }
   // make sure to reset the collision penalty
   relative_pos_norm_.clear();
+  box_positions_.clear();
   obstacle_radius_.clear();
 
   //
   quad_ptr_->getState(&quad_state_);
 
-  // compute relative distance to dynamic obstacles
+  // // compute relative distance to dynamic obstacles
+  // std::vector<Vector<3>, Eigen::aligned_allocator<Vector<3>>> relative_pos;
+  // for (int i = 0; i < (int)dynamic_objects_.size(); i++) {
+  //   // compute relative position vector
+  //   Vector<3> delta_pos = dynamic_objects_[i]->getPos() - quad_state_.p;
+  //   relative_pos.push_back(delta_pos);
+
+  //   // compute relative distance
+  //   Scalar obstacle_dist = delta_pos.norm();
+  //   // limit observation range
+  //   if (obstacle_dist > max_detection_range_) {
+  //     obstacle_dist = max_detection_range_;
+  //   }
+  //   relative_pos_norm_.push_back(obstacle_dist);
+
+  //   // store the obstacle radius
+  //   Scalar obs_radius = dynamic_objects_[i]->getScale().minCoeff() / 2;
+  //   obstacle_radius_.push_back(obs_radius);
+
+  //   //
+  //   if (obstacle_dist < obs_radius) {
+  //     std::string prefabId = dynamic_objects_[i]->getPrefabID();
+  //     std::cout << "Collided into " << prefabId << std::endl;
+  //     is_collision_ = true;
+  //   }
+  // }
+
+  // compute relative distance to dynamic obstacles with bounding boxes
   std::vector<Vector<3>, Eigen::aligned_allocator<Vector<3>>> relative_pos;
   for (int i = 0; i < (int)dynamic_objects_.size(); i++) {
     // compute relative position vector
     Vector<3> delta_pos = dynamic_objects_[i]->getPos() - quad_state_.p;
+    Vector<6> box_pos = dynamic_objects_[i]->getBoundingBox();
     relative_pos.push_back(delta_pos);
 
     // compute relative distance
@@ -180,13 +208,19 @@ bool VisionEnv::getObstacleState(Ref<Vector<>> obs_state) {
       obstacle_dist = max_detection_range_;
     }
     relative_pos_norm_.push_back(obstacle_dist);
+    box_positions_.push_back(box_pos);
 
     // store the obstacle radius
     Scalar obs_radius = dynamic_objects_[i]->getScale().minCoeff() / 2;
     obstacle_radius_.push_back(obs_radius);
 
     //
-    if (obstacle_dist < obs_radius) {
+    if (quad_state_.x(QS::POSX) > box_pos[0]
+     && quad_state_.x(QS::POSY) > box_pos[1]
+     && quad_state_.x(QS::POSZ) > box_pos[2]
+      && quad_state_.x(QS::POSX) < box_pos[3]
+      && quad_state_.x(QS::POSY) < box_pos[4]
+      && quad_state_.x(QS::POSZ) < box_pos[5]) {
       std::string prefabId = dynamic_objects_[i]->getPrefabID();
       std::cout << "Collided into " << prefabId << std::endl;
       is_collision_ = true;
@@ -307,36 +341,56 @@ bool VisionEnv::computeReward(Ref<Vector<>> reward) {
   // ---------------------- reward function design
   // - compute collision penalty
   Scalar collision_penalty = 0.0;
+  Scalar goal_reward = 0.0;
+  Scalar world_reward = 0.0;
+  
   size_t idx = 0;
+  const Scalar dist_margin = 0.1;
   for (size_t sort_idx : sort_indexes(relative_pos_norm_)) {
     if (idx >= visionenv::kNObstacles) break;
 
-    Scalar relative_dist =
-      (relative_pos_norm_[sort_idx] > 0) &&
-          (relative_pos_norm_[sort_idx] < max_detection_range_)
-        ? relative_pos_norm_[sort_idx]
-        : max_detection_range_;
+    Scalar min_distance = 1e9;
 
-    const Scalar dist_margin = 0.5;
-    if (relative_pos_norm_[sort_idx] <=
-        obstacle_radius_[sort_idx] + dist_margin) {
-      // compute distance penalty
-      collision_penalty += collision_coeff_ * std::exp(-1.0 * relative_dist);
+    for (int i = 0; i < 3; ++i) {
+      min_distance = std::min(min_distance, std::min(fabs(quad_state_.x(i) - box_positions_[sort_idx][i]), fabs(quad_state_.x(i) - box_positions_[sort_idx][i+3])));
+    }
+
+    
+    if (min_distance < dist_margin) {
+      collision_penalty += collision_coeff_ / (min_distance + 1e-6);
+    } else {
+      collision_penalty -= collision_coeff_ / (min_distance + 1e-6);
     }
 
     idx += 1;
   }
 
-  // - tracking a constant linear velocity
+  // - tracking a constant linear velocity ..should be called lin_vel_penalty
   Scalar lin_vel_reward =
     vel_coeff_ * (quad_state_.v - goal_linear_vel_).norm();
 
   // - angular velocity penalty, to avoid oscillations
   const Scalar ang_vel_penalty = angular_vel_coeff_ * quad_state_.w.norm();
 
+  Vector<3> goal_pos = Vector<3>(3.0, 0.0, 0.0);
+  Vector<3> delta_goal_pos = goal_pos - quad_state_.p;
+  Scalar goal_dist = delta_goal_pos.norm();
+  goal_reward = 1.0/(goal_dist + 1e-6);
+
+  const Vector<3> world_box_min = Vector<3>(-3, -3, -1.2);
+  const Vector<3> world_box_max = Vector<3>(4, 3, 0.7);
+  for (int i = 0; i < 3; ++i) {
+    if (quad_state_.x(i) < world_box_min[i] || quad_state_.x(i) > world_box_max[i]) {
+      world_reward -= 1.0;
+    }
+    else {
+      world_reward += 1.0;
+    }
+  }
+
   //  change progress reward as survive reward
   const Scalar total_reward =
-    lin_vel_reward + collision_penalty + ang_vel_penalty + survive_rew_;
+    lin_vel_reward + collision_penalty + ang_vel_penalty + survive_rew_ + goal_reward + world_reward;
 
   // return all reward components for debug purposes
   // only the total reward is used by the RL algorithm
@@ -347,35 +401,32 @@ bool VisionEnv::computeReward(Ref<Vector<>> reward) {
 
 bool VisionEnv::isTerminalState(Scalar &reward) {
   if (is_collision_) {
-    reward = -1.0;
-    // return true;
+    // reward = -1.0;
+    reward = 0.0;
+    return true;
   }
 
   // simulation time out
   if (cmd_.t >= max_t_ - sim_dt_) {
     logger_.warn("Simulation time out!");
-    reward = -1.0;
-    // return true;
-  }
-
-  if (quad_state_.x(QS::POSX >= 60)) {
-    reward = 1.0;
-    // return true;
+    reward = 0.0;
+    return true;
   }
 
   // world boundling box check
   // - x, y, and z
   const Scalar safty_threshold = 0.1;
-  bool x_valid = quad_state_.p(QS::POSX) >= world_box_[0] + safty_threshold &&
-                 quad_state_.p(QS::POSX) <= world_box_[1] - safty_threshold;
-  bool y_valid = quad_state_.p(QS::POSY) >= world_box_[2] + safty_threshold &&
-                 quad_state_.p(QS::POSY) <= world_box_[3] - safty_threshold;
+  bool x_valid = quad_state_.x(QS::POSX) >= world_box_[0] + safty_threshold &&
+                 quad_state_.x(QS::POSX) <= world_box_[1] - safty_threshold;
+  bool y_valid = quad_state_.x(QS::POSY) >= world_box_[2] + safty_threshold &&
+                 quad_state_.x(QS::POSY) <= world_box_[3] - safty_threshold;
   bool z_valid = quad_state_.x(QS::POSZ) >= world_box_[4] + safty_threshold &&
                  quad_state_.x(QS::POSZ) <= world_box_[5] - safty_threshold;
   if (!x_valid || !y_valid || !z_valid) {
-    reward = -1.0;
+    // reward = -1.0;
+    reward = 0.0;
     logger_.warn("Out of bounding box!");
-    // return true;
+    return true;
   }
   return false;
 }
@@ -466,7 +517,6 @@ bool VisionEnv::loadParam(const YAML::Node &cfg) {
 
   if (cfg["rewards"]) {
     // load reward coefficients for reinforcement learning
-    bound_coeff_ = cfg["rewards"]["bound_coeff"].as<Scalar>();
     vel_coeff_ = cfg["rewards"]["vel_coeff"].as<Scalar>();
     collision_coeff_ = cfg["rewards"]["collision_coeff"].as<Scalar>();
     angular_vel_coeff_ = cfg["rewards"]["angular_vel_coeff"].as<Scalar>();
@@ -529,6 +579,7 @@ bool VisionEnv::configDynamicObjects(const std::string &yaml_file) {
       (cfg_node[object_id]["rotation"]).as<std::vector<Scalar>>();
     std::vector<Scalar> scalevec =
       (cfg_node[object_id]["scale"]).as<std::vector<Scalar>>();
+    std::vector<Scalar> boudingboxvec = (cfg_node[object_id]["boundingbox"]).as<std::vector<Scalar>>();
 
     obj->setPosition(Vector<3>(posvec.data()));
     obj->setRotation(Quaternion(rotvec.data()));
@@ -536,6 +587,7 @@ bool VisionEnv::configDynamicObjects(const std::string &yaml_file) {
     obj->setSize(Vector<3>(1.0, 1.0, 1.0));
     // scale of the original size
     obj->setScale(Vector<3>(scalevec.data()));
+    obj->setBoundingBox(Vector<6>(boudingboxvec.data()));
 
     std::string csv_name = cfg_node[object_id]["csvtraj"].as<std::string>();
     std::string csv_file = obstacle_cfg_path_ + std::string("/csvtrajs/") +

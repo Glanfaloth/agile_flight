@@ -42,7 +42,7 @@ def main():
 
     # load the Unity standardalone, make sure you have downloaded it.
     # Lanlan: commented out because we want to run unity from unity project not from standalone
-    # os.system(os.environ["FLIGHTMARE_PATH"] + "/flightrender/RPG_Flightmare.x86_64 &")
+    # os.system(os.environ["FLIGHTMARE_PATH"] + "/flightrender/RPG_Flightmare_g.x86_64 &")
 
     # define the number of environment for parallelization simulation
     cfg["simulation"]["num_envs"] = 1 
