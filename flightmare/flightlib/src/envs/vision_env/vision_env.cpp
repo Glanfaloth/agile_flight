@@ -81,6 +81,7 @@ void VisionEnv::init() {
   // add dynamic objects
   std::string dynamic_object_yaml =
     obstacle_cfg_path_ + std::string("/dynamic_obstacles.yaml");
+
   if (!configDynamicObjects(dynamic_object_yaml)) {
     logger_.error(
       "Cannot config Dynamic Object Yaml. Something wrong with the config "
@@ -222,7 +223,8 @@ bool VisionEnv::getObstacleState(Ref<Vector<>> obs_state) {
       && quad_state_.x(QS::POSY) < box_pos[4]
       && quad_state_.x(QS::POSZ) < box_pos[5]) {
       std::string prefabId = dynamic_objects_[i]->getPrefabID();
-      std::cout << "Collided into " << prefabId << std::endl;
+      logger_.warn("Collided into ");
+      logger_.warn(prefabId);
       is_collision_ = true;
     }
   }
@@ -339,44 +341,52 @@ bool VisionEnv::simDynamicObstacles(const Scalar dt) {
 
 bool VisionEnv::computeReward(Ref<Vector<>> reward) {
   // ---------------------- reward function design
-  // - compute collision penalty
-  Scalar collision_penalty = 0.0;
-  Scalar goal_reward = 0.0;
-  Scalar world_reward = 0.0;
-  
-  size_t idx = 0;
-  const Scalar dist_margin = 0.1;
-  for (size_t sort_idx : sort_indexes(relative_pos_norm_)) {
-    if (idx >= visionenv::kNObstacles) break;
+  // - position tracking
+  const Scalar pos_reward = std::min(pos_coeff_ / ((quad_state_.p - goal_pos_).norm() + 1e-6), 50.0);
 
-    Scalar min_distance = 1e9;
+  // - orientation tracking
+  const Scalar ori_penalty =
+    ori_coeff_ *
+    (quad_state_.q().toRotationMatrix().eulerAngles(2, 1, 0)).norm();
 
-    for (int i = 0; i < 3; ++i) {
-      min_distance = std::min(min_distance, std::min(fabs(quad_state_.x(i) - box_positions_[sort_idx][i]), fabs(quad_state_.x(i) - box_positions_[sort_idx][i+3])));
-    }
+  // - linear velocity tracking
+  const Scalar lin_vel_penalty = vel_coeff_ * quad_state_.v.norm();
 
-    
-    if (min_distance < dist_margin) {
-      collision_penalty += collision_coeff_ / (min_distance + 1e-6);
-    } else {
-      collision_penalty -= collision_coeff_ / (min_distance + 1e-6);
-    }
-
-    idx += 1;
-  }
-
-  // - tracking a constant linear velocity ..should be called lin_vel_penalty
-  Scalar lin_vel_penalty =
-    vel_coeff_ * (quad_state_.v - goal_linear_vel_).norm();
-
-  // - angular velocity penalty, to avoid oscillations
+  // - angular velocity tracking to avoid oscillations
   const Scalar ang_vel_penalty = angular_vel_coeff_ * quad_state_.w.norm();
 
-  Vector<3> goal_pos = Vector<3>(3.0, 0.0, 0.0);
-  Vector<3> delta_goal_pos = goal_pos - quad_state_.p;
-  Scalar goal_dist = delta_goal_pos.norm();
-  goal_reward = 1.0/(goal_dist + 1e-6);
+  // - compute collision penalty
+  Scalar collision_penalty = 0.0;
+  // Scalar goal_reward = 0.0;
+  Scalar world_reward = 0.0;
+  
+  // size_t idx = 0;
+  // const Scalar dist_margin = 0.1;
+  // for (size_t sort_idx : sort_indexes(relative_pos_norm_)) {
+  //   if (idx >= visionenv::kNObstacles) break;
 
+  //   Scalar min_distance = 1e9;
+
+  //   for (int i = 0; i < 3; ++i) {
+  //     min_distance = std::min(min_distance, std::min(fabs(quad_state_.x(i) - box_positions_[sort_idx][i]), fabs(quad_state_.x(i) - box_positions_[sort_idx][i+3])));
+  //   }
+
+    
+  //   if (min_distance < dist_margin) {
+  //     collision_penalty += collision_coeff_ / (min_distance + 1e-6);
+  //   }
+
+  //   idx += 1;
+  // }
+
+  // Vector<3> delta_goal_pos = goal_pos_ - quad_state_.p;
+  // Scalar goal_dist = delta_goal_pos.norm();
+  // if (goal_dist < 1e-2) {
+  //   goal_reward = 50;
+  // } else {
+  //   goal_reward = goal_rew_coeff_ /(goal_dist + 1e-6);
+  // }
+  
   const Vector<3> world_box_min = Vector<3>(-3, -3, -1.2);
   const Vector<3> world_box_max = Vector<3>(4, 3, 0.7);
   for (int i = 0; i < 3; ++i) {
@@ -390,21 +400,21 @@ bool VisionEnv::computeReward(Ref<Vector<>> reward) {
 
   //  change progress reward as survive reward
   const Scalar total_reward =
-    lin_vel_penalty + collision_penalty + ang_vel_penalty + survive_rew_ + goal_reward + world_reward;
+    pos_reward + ori_penalty + lin_vel_penalty + collision_penalty + ang_vel_penalty + survive_rew_ + world_reward;
 
   // return all reward components for debug purposes
   // only the total reward is used by the RL algorithm
-  reward << lin_vel_penalty, collision_penalty, ang_vel_penalty, survive_rew_,
+  reward << pos_reward, ori_penalty, lin_vel_penalty, collision_penalty, ang_vel_penalty, survive_rew_, 
     total_reward;
   return true;
 }
 
 bool VisionEnv::isTerminalState(Scalar &reward) {
-  if (is_collision_) {
-    // reward = -1.0;
-    reward = 0.0;
-    return true;
-  }
+  // if (is_collision_) {
+  //   reward = -100.0;
+  //   logger_.warn("Collision");
+  //   return false;
+  // }
 
   // simulation time out
   if (cmd_.t >= max_t_ - sim_dt_) {
@@ -414,7 +424,6 @@ bool VisionEnv::isTerminalState(Scalar &reward) {
   }
 
   // world boundling box check
-  // - x, y, and z
   const Scalar safty_threshold = 0.1;
   bool x_valid = quad_state_.x(QS::POSX) >= world_box_[0] + safty_threshold &&
                  quad_state_.x(QS::POSX) <= world_box_[1] - safty_threshold;
@@ -423,14 +432,12 @@ bool VisionEnv::isTerminalState(Scalar &reward) {
   bool z_valid = quad_state_.x(QS::POSZ) >= world_box_[4] + safty_threshold &&
                  quad_state_.x(QS::POSZ) <= world_box_[5] - safty_threshold;
   if (!x_valid || !y_valid || !z_valid) {
-    // reward = -1.0;
-    reward = 0.0;
+    reward = -1.0;
     logger_.warn("Out of bounding box!");
     return true;
   }
   return false;
 }
-
 
 bool VisionEnv::getQuadAct(Ref<Vector<>> act) const {
   if (cmd_.t >= 0.0 && pi_act_.allFinite() && (act.size() == pi_act_.size())) {
@@ -465,7 +472,6 @@ bool VisionEnv::getDepthImage(Ref<DepthImgVector<>> depth_img) {
   return true;
 }
 
-
 bool VisionEnv::getImage(Ref<ImgVector<>> img, const bool rgb) {
   if (!rgb_camera_) {
     logger_.error("No Camera! Cannot retrieve Images.");
@@ -494,7 +500,6 @@ bool VisionEnv::getImage(Ref<ImgVector<>> img, const bool rgb) {
   return true;
 }
 
-
 bool VisionEnv::loadParam(const YAML::Node &cfg) {
   if (cfg["environment"]) {
     difficulty_level_ = cfg["environment"]["level"].as<std::string>();
@@ -503,6 +508,9 @@ bool VisionEnv::loadParam(const YAML::Node &cfg) {
     std::vector<Scalar> goal_vel_vec =
       cfg["environment"]["goal_vel"].as<std::vector<Scalar>>();
     goal_linear_vel_ = Vector<3>(goal_vel_vec.data());
+    std::vector<Scalar> goal_pos_vec =
+      cfg["environment"]["goal_pos"].as<std::vector<Scalar>>();
+    goal_pos_ = Vector<3>(goal_pos_vec.data());
     max_detection_range_ =
       cfg["environment"]["max_detection_range"].as<Scalar>();
   }
@@ -521,6 +529,9 @@ bool VisionEnv::loadParam(const YAML::Node &cfg) {
     collision_coeff_ = cfg["rewards"]["collision_coeff"].as<Scalar>();
     angular_vel_coeff_ = cfg["rewards"]["angular_vel_coeff"].as<Scalar>();
     survive_rew_ = cfg["rewards"]["survive_rew"].as<Scalar>();
+    goal_rew_coeff_ = cfg["rewards"]["goal_rew_coeff"].as<Scalar>();
+    pos_coeff_ = cfg["rewards"]["pos_coeff"].as<Scalar>();
+    ori_coeff_ = cfg["rewards"]["ori_coeff"].as<Scalar>();
 
     // load reward settings
     reward_names_ = cfg["rewards"]["names"].as<std::vector<std::string>>();
@@ -740,13 +751,11 @@ bool VisionEnv::setUnity(bool render) {
   return true;
 }
 
-
 bool VisionEnv::connectUnity(void) {
   if (unity_bridge_ptr_ == nullptr) return false;
   unity_ready_ = unity_bridge_ptr_->connectUnity(scene_id_);
   return unity_ready_;
 }
-
 
 FrameID VisionEnv::updateUnity(const FrameID frame_id) {
   if (unity_render_ && unity_ready_) {
@@ -756,7 +765,6 @@ FrameID VisionEnv::updateUnity(const FrameID frame_id) {
     return 0;
   }
 }
-
 
 void VisionEnv::disconnectUnity(void) {
   if (unity_bridge_ptr_ != nullptr) {

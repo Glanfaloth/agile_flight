@@ -719,51 +719,51 @@ Object30:
   - -1.3299
   - -1.2068
   - -0.3011
-# Object31:
-#   csvtraj: traj_box
-#   loop: false
-#   position:
-#   - 3
-#   - 0
-#   - 0
-#   prefab: rpg_box01
-#   rotation:
-#   - 0
-#   - 0
-#   - 0
-#   - 0
-#   scale:
-#   - 0.1
-#   - 0.1
-#   - 0.1
-#   boundingbox:
-#   - 2.9
-#   - -0.1
-#   - 0.1
-#   - 3.1
-#   - -0.1
-#   - 0.1
 Object31:
-  csvtraj: traj_scene
+  csvtraj: traj_box
   loop: false
   position:
-  - 0.34290952
-  - -0.45277571
-  - -0.42194323
-  prefab: scene_mesh_t
+  - 2.5
+  - 0
+  - 0
+  prefab: rpg_box01
   rotation:
   - 0
   - 0
   - 0
   - 0
   scale:
-  - 1
-  - 1
-  - 1
+  - 0.1
+  - 0.1
+  - 0.1
   boundingbox:
-  - -2
-  - -2
-  - -2
-  - -2
-  - -2
-  - -2
+  - 2.4
+  - -0.1
+  - -0.1
+  - 2.6
+  - 0.1
+  - 0.1
+# Object31:
+#   csvtraj: traj_scene
+#   loop: false
+#   position:
+#   - 0.34290952
+#   - -0.45277571
+#   - -0.42194323
+#   prefab: scene_mesh_t
+#   rotation:
+#   - 0
+#   - 0
+#   - 0
+#   - 0
+#   scale:
+#   - 1
+#   - 1
+#   - 1
+#   boundingbox:
+#   - -200
+#   - -200
+#   - -200
+#   - -200
+#   - -200
+#   - -200
