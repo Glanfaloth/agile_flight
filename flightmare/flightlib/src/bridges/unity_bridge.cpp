@@ -124,6 +124,14 @@ bool UnityBridge::getRender(const FrameID frame_id) {
       quaternionRos2Unity(object->getQuat());
   }
 
+  for (size_t idx = 0; idx < pub_msg_.static_objects.size(); idx++) {
+    std::shared_ptr<UnityObject> object = static_objects_[idx];
+    pub_msg_.static_objects[idx].position =
+      positionRos2Unity(object->getPos());
+    pub_msg_.static_objects[idx].rotation =
+      quaternionRos2Unity(object->getQuat());
+  }
+
 
   // create new message object
   zmqpp::message msg;
