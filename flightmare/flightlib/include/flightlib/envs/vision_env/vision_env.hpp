@@ -35,7 +35,7 @@ enum Vision : int {
 
   // observations
   kObs = 0,
-  kNObs = 15 + kNObstacles * kNObstaclesState, // 15 is for goal linear velocity (3) orientation matrix (9) quad velocity (3)
+  kNObs = 12, // 15 is for orientation matrix (9) quad velocity (3)
 
   // control actions
   kAct = 0,
@@ -94,6 +94,7 @@ class VisionEnv final : public EnvBase {
   //
   int getNumDetectedObstacles(void);
   bool isCollision(void) { return is_collision_; };
+  bool isReachedGoal(void) { return is_reached_goal_; };
   inline std::vector<std::string> getRewardNames() { return reward_names_; }
   inline void setSceneID(const SceneID id) { scene_id_ = id; }
   inline std::shared_ptr<Quadrotor> getQuadrotor() { return quad_ptr_; }
@@ -121,10 +122,10 @@ class VisionEnv final : public EnvBase {
   Logger logger_{"VisionEnv"};
 
   // Define reward for training
-  Scalar vel_coeff_, collision_coeff_, angular_vel_coeff_, survive_rew_, goal_rew_coeff_, pos_coeff_, ori_coeff_;
+  Scalar vel_coeff_, collision_coeff_, angular_vel_coeff_, survive_rew_, pos_coeff_, ori_coeff_;
   Vector<3> goal_linear_vel_;
-  Vector<3> goal_pos_;
-  bool is_collision_;
+  Vector<3> goal_pos_, start_pos_;
+  bool is_collision_, is_reached_goal_;
 
   // max detection range (meter)
   Scalar max_detection_range_;
