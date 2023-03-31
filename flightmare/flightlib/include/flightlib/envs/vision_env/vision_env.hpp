@@ -125,7 +125,7 @@ class VisionEnv final : public EnvBase {
   Scalar vel_coeff_, collision_coeff_, angular_vel_coeff_, survive_rew_, pos_coeff_, ori_coeff_;
   Vector<3> goal_linear_vel_;
   Vector<3> goal_pos_, start_pos_;
-  bool is_collision_, is_reached_goal_;
+  bool is_collision_, is_reached_goal_, test_env_;
 
   // max detection range (meter)
   Scalar max_detection_range_;
