@@ -35,7 +35,7 @@ enum Vision : int {
 
   // observations
   kObs = 0,
-  kNObs = 12, // 15 is for orientation matrix (9) quad velocity (3)
+  kNObs = 15, // 15 is for orientation matrix (9) quad velocity (3) goal_pos (3)
 
   // control actions
   kAct = 0,

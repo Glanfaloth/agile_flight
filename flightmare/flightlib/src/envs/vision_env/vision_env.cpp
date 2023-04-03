@@ -44,7 +44,7 @@ void VisionEnv::init() {
   //
   is_reached_goal_ = false;
   unity_render_offset_ << 0.0, 0.0, 0.0;
-  goal_linear_vel_ << 0.0, 0.0, 0.0;
+  // goal_linear_vel_ << 0.0, 0.0, 0.0;
   cmd_.setZeros();
 
   // create quadrotors
@@ -111,9 +111,10 @@ bool VisionEnv::reset(Ref<Vector<>> obs) {
   quad_state_.setZero();
   pi_act_.setZero();
   old_pi_act_.setZero();
-  if (!test_env_) {
-    goal_pos_ << start_pos_[0] + uniform_dist_(random_gen_), start_pos_[1] + uniform_dist_(random_gen_), start_pos_[2];
-  }
+  is_reached_goal_ = false;
+  // if (!test_env_) {
+  //   goal_pos_ << start_pos_[0] + uniform_dist_(random_gen_), start_pos_[1] + uniform_dist_(random_gen_), start_pos_[2];
+  // }
 
   // randomly reset the quadrotor state
   // reset position
@@ -150,7 +151,7 @@ bool VisionEnv::getObs(Ref<Vector<>> obs) {
   quad_ptr_->getState(&quad_state_);
 
   // Observations
-  obs << ori, quad_state_.v;
+  obs << ori, quad_state_.v, goal_pos_ - quad_state_.p;
   return true;
 }
 
@@ -208,7 +209,7 @@ bool VisionEnv::simDynamicObstacles(const Scalar dt) {
 bool VisionEnv::computeReward(Ref<Vector<>> reward) {
   // ---------------------- reward function design
   // - position tracking
-  const Scalar pos_penalty = pos_coeff_ * (quad_state_.p - goal_pos_).norm();
+  const Scalar pos_penalty = pos_coeff_ * std::exp(-(quad_state_.p - goal_pos_).norm());
   if ((quad_state_.p - goal_pos_).norm() < 0.1) {
     is_reached_goal_ = true;
   }
@@ -216,13 +217,13 @@ bool VisionEnv::computeReward(Ref<Vector<>> reward) {
   // - orientation tracking
   const Scalar ori_penalty =
     ori_coeff_ *
-    (quad_state_.q().toRotationMatrix().eulerAngles(2, 1, 0)).norm();
+    std::exp(-(quad_state_.q().toRotationMatrix().eulerAngles(2, 1, 0)).norm());
 
   // - linear velocity tracking
-  const Scalar lin_vel_penalty = vel_coeff_ * quad_state_.v.norm();
+  const Scalar lin_vel_penalty = vel_coeff_ * std::exp(-quad_state_.v.norm());
 
   // - angular velocity tracking to avoid oscillations
-  const Scalar ang_vel_penalty = angular_vel_coeff_ * quad_state_.w.norm();
+  const Scalar ang_vel_penalty = angular_vel_coeff_ * std::exp(-quad_state_.w.norm());
 
   //  change progress reward as survive reward
   const Scalar total_reward =
@@ -239,6 +240,7 @@ bool VisionEnv::computeReward(Ref<Vector<>> reward) {
 bool VisionEnv::isTerminalState(Scalar &reward) {
   if (is_reached_goal_) {
     reward = 10;
+    return true;
   }
   // simulation time out
   if (cmd_.t >= max_t_ - sim_dt_) {
@@ -318,14 +320,13 @@ bool VisionEnv::loadParam(const YAML::Node &cfg) {
     std::vector<Scalar> start_pos_vec =
       cfg["environment"]["start_pos"].as<std::vector<Scalar>>();
     start_pos_ = Vector<3>(start_pos_vec.data());
-    test_env_ = cfg["environment"]["test_env"].as<bool>();
-    if (test_env_) {
-      std::vector<Scalar> goal_pos_vec =
-      cfg["environment"]["goal_pos"].as<std::vector<Scalar>>();
+    // test_env_ = cfg["environment"]["test_env"].as<bool>();
+    // if (test_env_) {
+    std::vector<Scalar> goal_pos_vec = cfg["environment"]["goal_pos"].as<std::vector<Scalar>>();
     goal_pos_ = Vector<3>(goal_pos_vec.data());
-    } else {
-      goal_pos_ << start_pos_[0] + uniform_dist_(random_gen_), start_pos_[1] + uniform_dist_(random_gen_), start_pos_[2];
-    }
+    // } else {
+    //   goal_pos_ << start_pos_[0] + uniform_dist_(random_gen_), start_pos_[1] + uniform_dist_(random_gen_), start_pos_[2];
+    // }
   }
 
   if (cfg["simulation"]) {

@@ -3,16 +3,16 @@ environment:
   env_folder: "environment_0" # configurations for dynamic and static obstacles
   world_box: [-3.0, 5.0, -3.0, 3.0, -1.0, 2.0] # Bounding box applied during training, exiting this box terminates the episode. [xmin, xmax, ymin, ymax, zmin, zmax]
   goal_vel: [0.5, 0.0, 0.0] # goal velicty for tracking vx, vy, vz
-  start_pos: [-1.4, -2.4, 0.5] # start position x, y, z
-  goal_pos: [-2, -2.4, 0.5] # goal position x, y, z
+  start_pos: [1.4, 2, 0.5] # start position x, y, z
+  goal_pos: [-2.1, 2, 0.5] # goal position x, y, z
   max_detection_range: 1.0 # max obstacle detection range [m], obstacles outside this range will not be detected. The number of obstacles detected is fixed to 10, if less than 10 obstacles are within detectable range, the observation is padded with 10.0
-  test_env: yes
+  test_env: no
 rewards:
-  vel_coeff: -0.001
-  angular_vel_coeff: -0.001
-  survive_rew: 0.03
-  pos_coeff: -0.01 # reward coefficient for position
-  ori_coeff: -0.002 # reward coefficient for orientation
+  vel_coeff: 0.001
+  angular_vel_coeff: 0.001
+  survive_rew: 0
+  pos_coeff: 1
+  ori_coeff: 0.005
   names:
     [
       "pos_penalty",
