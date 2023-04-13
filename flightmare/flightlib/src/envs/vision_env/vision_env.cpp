@@ -112,9 +112,9 @@ bool VisionEnv::reset(Ref<Vector<>> obs) {
   pi_act_.setZero();
   old_pi_act_.setZero();
   is_reached_goal_ = false;
-  // if (!test_env_) {
-  //   goal_pos_ << start_pos_[0] + uniform_dist_(random_gen_), start_pos_[1] + uniform_dist_(random_gen_), start_pos_[2];
-  // }
+  if (!test_env_) {
+    goal_pos_ << start_pos_[0] + uniform_dist_(random_gen_) * 2, start_pos_[1] + uniform_dist_(random_gen_) * 2, start_pos_[2] + uniform_dist_(random_gen_) * 0.5;
+  }
 
   // randomly reset the quadrotor state
   // reset position
@@ -320,13 +320,13 @@ bool VisionEnv::loadParam(const YAML::Node &cfg) {
     std::vector<Scalar> start_pos_vec =
       cfg["environment"]["start_pos"].as<std::vector<Scalar>>();
     start_pos_ = Vector<3>(start_pos_vec.data());
-    // test_env_ = cfg["environment"]["test_env"].as<bool>();
-    // if (test_env_) {
-    std::vector<Scalar> goal_pos_vec = cfg["environment"]["goal_pos"].as<std::vector<Scalar>>();
-    goal_pos_ = Vector<3>(goal_pos_vec.data());
-    // } else {
-    //   goal_pos_ << start_pos_[0] + uniform_dist_(random_gen_), start_pos_[1] + uniform_dist_(random_gen_), start_pos_[2];
-    // }
+    test_env_ = cfg["environment"]["test_env"].as<bool>();
+    if (test_env_) {
+      std::vector<Scalar> goal_pos_vec = cfg["environment"]["goal_pos"].as<std::vector<Scalar>>();
+      goal_pos_ = Vector<3>(goal_pos_vec.data());
+    } else {
+      goal_pos_ << start_pos_[0] + uniform_dist_(random_gen_) * 2, start_pos_[1] + uniform_dist_(random_gen_) * 2, start_pos_[2] + uniform_dist_(random_gen_) * 0.5;
+    }
   }
 
   if (cfg["simulation"]) {

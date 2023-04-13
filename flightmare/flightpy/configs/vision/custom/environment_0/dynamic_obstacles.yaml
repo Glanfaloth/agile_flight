@@ -1,10 +1,10 @@
-N: 11
+N: 9
 Object1:
   boundingbox:
-  - 1.8571
+  - 1.3541
   - -1.0307
   - -1.0872
-  - 1.3541
+  - 1.8571
   - -0.496
   - 0.5708
   csvtraj: traj_human_0
@@ -23,74 +23,20 @@ Object1:
   - 1
   - 1
   - 1
-Object10:
+Object2:
   boundingbox:
-  - 1.5666
+  - 1.0405
   - -0.1146
   - -1.0684
-  - 1.0405
+  - 1.5666
   - 0.4171
   - 0.5729
-  csvtraj: traj_human_9
+  csvtraj: traj_human_1
   loop: false
   position:
   - 1.3007723544330956
   - 0.13453372036933542
   - 0.0689833816254006
-  prefab: N3OpenArea_human_9_centered
-  rotation:
-  - 0
-  - 0
-  - 0
-  - 0
-  scale:
-  - 1
-  - 1
-  - 1
-Object11:
-  boundingbox:
-  # - -1.4088
-  # - -3.3158
-  # - -1.1268
-  # - 1.4939
-  # - 1.6956
-  # - 0.6925
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  csvtraj: traj_scene
-  loop: false
-  position:
-  - 0.34290951931087993
-  - -0.45277570701017256
-  - -0.42194323321302957
-  prefab: N3OpenArea_scene_mesh_centered
-  rotation:
-  - 0
-  - 0
-  - 0
-  - 0
-  scale:
-  - 1
-  - 1
-  - 1
-Object2:
-  boundingbox:
-  - 1.4899
-  - -0.7968
-  - -1.0938
-  - 0.8605
-  - -0.2285
-  - 0.5471
-  csvtraj: traj_human_1
-  loop: false
-  position:
-  - 1.191472456964999
-  - -0.5035566589570554
-  - 0.04461709850668742
   prefab: N3OpenArea_human_1_centered
   rotation:
   - 0
@@ -103,10 +49,10 @@ Object2:
   - 1
 Object3:
   boundingbox:
-  - 0.7067
+  - 0.1155
   - 0.07
   - -1.0764
-  - 0.1155
+  - 0.7067
   - 0.6125
   - 0.5485
   csvtraj: traj_human_2
@@ -127,10 +73,10 @@ Object3:
   - 1
 Object4:
   boundingbox:
-  - 0.4824
+  - -0.1221
   - -1.1417
   - -1.0896
-  - -0.1221
+  - 0.4824
   - -0.589
   - 0.5041
   csvtraj: traj_human_3
@@ -151,10 +97,10 @@ Object4:
   - 1
 Object5:
   boundingbox:
-  - 0.0202
+  - -0.5347
   - -1.4551
   - -0.7429
-  - -0.5347
+  - 0.0202
   - -0.8441
   - 0.5885
   csvtraj: traj_human_4
@@ -175,10 +121,10 @@ Object5:
   - 1
 Object6:
   boundingbox:
-  - 0.3161
+  - -0.5329
   - -0.769
   - -1.0851
-  - -0.5329
+  - 0.3161
   - -0.0633
   - -0.0075
   csvtraj: traj_human_5
@@ -199,10 +145,10 @@ Object6:
   - 1
 Object7:
   boundingbox:
-  - 0.9725
+  - 0.199
   - -1.9579
   - -1.0979
-  - 0.199
+  - 0.9725
   - -1.3681
   - 0.5543
   csvtraj: traj_human_6
@@ -223,18 +169,18 @@ Object7:
   - 1
 Object8:
   boundingbox:
-  - 1.2079
-  - -0.041
-  - -1.0757
-  - 0.7114
-  - 0.4391
-  - 0.5534
+  - -0.7316
+  - 0.0462
+  - -1.1268
+  - 0.0625
+  - 0.9349
+  - 0.1084
   csvtraj: traj_human_7
   loop: false
   position:
-  - 0.9775610691164209
-  - 0.1869648103399541
-  - 0.049930010253395704
+  - -0.39181693923438643
+  - 0.4546033402092583
+  - -0.2915754326349574
   prefab: N3OpenArea_human_7_centered
   rotation:
   - 0
@@ -247,19 +193,19 @@ Object8:
   - 1
 Object9:
   boundingbox:
-  - 0.0625
-  - 0.0462
+  - -1.5795
+  - -3.3158
   - -1.1268
-  - -0.7316
-  - 0.9349
-  - 0.1084
-  csvtraj: traj_human_8
+  - 2.1867
+  - 1.6956
+  - 0.6925
+  csvtraj: traj_scene
   loop: false
   position:
-  - -0.39181693923438643
-  - 0.4546033402092583
-  - -0.2915754326349574
-  prefab: N3OpenArea_human_8_centered
+  - 0.34290951931087993
+  - -0.45277570701017256
+  - -0.42194323321302957
+  prefab: N3OpenArea_scene_mesh_centered
   rotation:
   - 0
   - 0
