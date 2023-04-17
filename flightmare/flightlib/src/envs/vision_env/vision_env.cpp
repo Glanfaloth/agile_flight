@@ -42,7 +42,6 @@ VisionEnv::VisionEnv(const YAML::Node &cfg_node, const int env_id) : EnvBase() {
 
 void VisionEnv::init() {
   //
-  is_reached_goal_ = false;
   unity_render_offset_ << 0.0, 0.0, 0.0;
   // goal_linear_vel_ << 0.0, 0.0, 0.0;
   cmd_.setZeros();
@@ -112,28 +111,7 @@ bool VisionEnv::reset(Ref<Vector<>> obs) {
   quad_state_.setZero();
   pi_act_.setZero();
   old_pi_act_.setZero();
-  is_reached_goal_ = false;
-  index = index + 1;
-  if (test_env_) {
-    if (index+1 < num_waypoints) {
-      // Set goal position to the next waypoint
-      // std::vector<Scalar> start_pos_vec = cfg_["environment"]["way_points"][index].as<std::vector<Scalar>>();
-      // start_pos_ = Vector<3>(start_pos_vec.data());
-      start_pos_ = quad_old_state_.p;
-      std::vector<Scalar> goal_pos_vec = cfg_["environment"]["way_points"][index+1].as<std::vector<Scalar>>();
-      goal_pos_ = Vector<3>(goal_pos_vec.data());
-      
-    }
-    else {
-      // reached last waypoint, reset index to 0
-      index = 0;
-      std::vector<Scalar> start_pos_vec = cfg_["environment"]["way_points"][index].as<std::vector<Scalar>>();
-      start_pos_ = Vector<3>(start_pos_vec.data());
-      std::vector<Scalar> goal_pos_vec = cfg_["environment"]["way_points"][index+1].as<std::vector<Scalar>>();
-      goal_pos_ = Vector<3>(goal_pos_vec.data());
-    }
-  }
-  else {
+  if (!test_env_) {
     start_pos_ << uniform_dist_(random_gen_) * 3, uniform_dist_(random_gen_) * 3, uniform_dist_(random_gen_) * 0.5 + 0.5;
     goal_pos_ << uniform_dist_(random_gen_) * 3, uniform_dist_(random_gen_) * 3, uniform_dist_(random_gen_) * 0.5 + 0.5;
   }
@@ -170,10 +148,6 @@ bool VisionEnv::getObs(Ref<Vector<>> obs) {
   Vector<9> ori = Map<Vector<>>(quad_state_.R().data(), quad_state_.R().size());
 
   quad_ptr_->getState(&quad_state_);
-
-  if ((quad_state_.p - goal_pos_).norm() < 0.1) {
-    is_reached_goal_ = true;
-  }
 
   // Observations
   obs << ori, quad_state_.v, goal_pos_ - quad_state_.p;
@@ -250,6 +224,14 @@ bool VisionEnv::computeReward(Ref<Vector<>> reward) {
   //  change progress reward as survive reward
   const Scalar total_reward =
     pos_penalty + ori_penalty + lin_vel_penalty + ang_vel_penalty + survive_rew_;
+  
+  std::cout << "quad_state_.p = " << quad_state_.p.transpose() << std::endl;
+  if (test_env_ && (quad_state_.p - goal_pos_).norm() < 0.3) {
+    std::cout << "update" << std::endl;
+    index = index + 1;
+    std::vector<Scalar> goal_pos_vec = cfg_["environment"]["way_points"][index+1].as<std::vector<Scalar>>();
+    goal_pos_ = Vector<3>(goal_pos_vec.data());
+  }
 
   // return all reward components for debug purposes
   // only the total reward is used by the RL algorithm
@@ -260,10 +242,6 @@ bool VisionEnv::computeReward(Ref<Vector<>> reward) {
 }
 
 bool VisionEnv::isTerminalState(Scalar &reward) {
-  if (is_reached_goal_) {
-    // reward = 10;
-    return true;
-  }
   // simulation time out
   if (cmd_.t >= max_t_ - sim_dt_) {
     reward = 0.0;

@@ -43,7 +43,7 @@ unity:
 simulation:
   seed: 1
   sim_dt: 0.02
-  max_t: 4.0
+  max_t: 20
   num_envs: 100 
   num_threads: 10
 
