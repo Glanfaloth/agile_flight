@@ -46,6 +46,7 @@ void VisionEnv::init() {
   unity_render_offset_ << 0.0, 0.0, 0.0;
   // goal_linear_vel_ << 0.0, 0.0, 0.0;
   cmd_.setZeros();
+  index = 0;
 
   // create quadrotors
   quad_ptr_ = std::make_shared<Quadrotor>();
@@ -112,11 +113,31 @@ bool VisionEnv::reset(Ref<Vector<>> obs) {
   pi_act_.setZero();
   old_pi_act_.setZero();
   is_reached_goal_ = false;
-  if (!test_env_) {
-    goal_pos_ << start_pos_[0] + uniform_dist_(random_gen_) * 2, start_pos_[1] + uniform_dist_(random_gen_) * 2, start_pos_[2] + uniform_dist_(random_gen_) * 0.5;
+  index = index + 1;
+  if (test_env_) {
+    if (index+1 < num_waypoints) {
+      // Set goal position to the next waypoint
+      // std::vector<Scalar> start_pos_vec = cfg_["environment"]["way_points"][index].as<std::vector<Scalar>>();
+      // start_pos_ = Vector<3>(start_pos_vec.data());
+      start_pos_ = quad_old_state_.p;
+      std::vector<Scalar> goal_pos_vec = cfg_["environment"]["way_points"][index+1].as<std::vector<Scalar>>();
+      goal_pos_ = Vector<3>(goal_pos_vec.data());
+      
+    }
+    else {
+      // reached last waypoint, reset index to 0
+      index = 0;
+      std::vector<Scalar> start_pos_vec = cfg_["environment"]["way_points"][index].as<std::vector<Scalar>>();
+      start_pos_ = Vector<3>(start_pos_vec.data());
+      std::vector<Scalar> goal_pos_vec = cfg_["environment"]["way_points"][index+1].as<std::vector<Scalar>>();
+      goal_pos_ = Vector<3>(goal_pos_vec.data());
+    }
+  }
+  else {
+    start_pos_ << uniform_dist_(random_gen_) * 3, uniform_dist_(random_gen_) * 3, uniform_dist_(random_gen_) * 0.5 + 0.5;
+    goal_pos_ << uniform_dist_(random_gen_) * 3, uniform_dist_(random_gen_) * 3, uniform_dist_(random_gen_) * 0.5 + 0.5;
   }
 
-  // randomly reset the quadrotor state
   // reset position
   quad_state_.x(QS::POSX) = start_pos_[0];
   quad_state_.x(QS::POSY) = start_pos_[1];
@@ -149,6 +170,10 @@ bool VisionEnv::getObs(Ref<Vector<>> obs) {
   Vector<9> ori = Map<Vector<>>(quad_state_.R().data(), quad_state_.R().size());
 
   quad_ptr_->getState(&quad_state_);
+
+  if ((quad_state_.p - goal_pos_).norm() < 0.1) {
+    is_reached_goal_ = true;
+  }
 
   // Observations
   obs << ori, quad_state_.v, goal_pos_ - quad_state_.p;
@@ -210,9 +235,6 @@ bool VisionEnv::computeReward(Ref<Vector<>> reward) {
   // ---------------------- reward function design
   // - position tracking
   const Scalar pos_penalty = pos_coeff_ * std::exp(-(quad_state_.p - goal_pos_).norm());
-  if ((quad_state_.p - goal_pos_).norm() < 0.1) {
-    is_reached_goal_ = true;
-  }
 
   // - orientation tracking
   const Scalar ori_penalty =
@@ -239,7 +261,7 @@ bool VisionEnv::computeReward(Ref<Vector<>> reward) {
 
 bool VisionEnv::isTerminalState(Scalar &reward) {
   if (is_reached_goal_) {
-    reward = 10;
+    // reward = 10;
     return true;
   }
   // simulation time out
@@ -317,16 +339,22 @@ bool VisionEnv::loadParam(const YAML::Node &cfg) {
     difficulty_level_ = cfg["environment"]["level"].as<std::string>();
     env_folder_ = cfg["environment"]["env_folder"].as<std::string>();
     world_box_ = cfg["environment"]["world_box"].as<std::vector<Scalar>>();
-    std::vector<Scalar> start_pos_vec =
-      cfg["environment"]["start_pos"].as<std::vector<Scalar>>();
-    start_pos_ = Vector<3>(start_pos_vec.data());
     test_env_ = cfg["environment"]["test_env"].as<bool>();
     if (test_env_) {
-      std::vector<Scalar> goal_pos_vec = cfg["environment"]["goal_pos"].as<std::vector<Scalar>>();
+      // std::vector<Scalar> start_pos_vec = cfg["environment"]["start_pos"].as<std::vector<Scalar>>();
+      // start_pos_ = Vector<3>(start_pos_vec.data());
+      // std::vector<Scalar> goal_pos_vec = cfg["environment"]["goal_pos"].as<std::vector<Scalar>>();
+      // goal_pos_ = Vector<3>(goal_pos_vec.data());
+      std::vector<Scalar> start_pos_vec = cfg["environment"]["way_points"][index].as<std::vector<Scalar>>();
+      start_pos_ = Vector<3>(start_pos_vec.data());
+      quad_old_state_.p = start_pos_;
+      std::vector<Scalar> goal_pos_vec = cfg["environment"]["way_points"][index+1].as<std::vector<Scalar>>();
       goal_pos_ = Vector<3>(goal_pos_vec.data());
     } else {
-      goal_pos_ << start_pos_[0] + uniform_dist_(random_gen_) * 2, start_pos_[1] + uniform_dist_(random_gen_) * 2, start_pos_[2] + uniform_dist_(random_gen_) * 0.5;
+      start_pos_ << uniform_dist_(random_gen_) * 3, uniform_dist_(random_gen_) * 3, uniform_dist_(random_gen_) * 0.5 + 0.5;
+      goal_pos_ << uniform_dist_(random_gen_) * 3, uniform_dist_(random_gen_) * 3, uniform_dist_(random_gen_) * 0.5 + 0.5;
     }
+    num_waypoints = cfg["environment"]["way_points"].size();
   }
 
   if (cfg["simulation"]) {
