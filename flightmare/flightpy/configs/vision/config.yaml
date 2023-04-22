@@ -1,11 +1,11 @@
 environment:
   level: "custom" # three difficulty level [easy, medium, hard]
-  env_folder: "environment_0" # configurations for dynamic and static obstacles
+  env_folder: "environment_1" # configurations for dynamic and static obstacles
   world_box: [-3.0, 5.0, -3.0, 3.0, -1.0, 2.0] # Bounding box applied during training, exiting this box terminates the episode. [xmin, xmax, ymin, ymax, zmin, zmax]
   goal_vel: [0.5, 0.0, 0.0] # goal velicty for tracking vx, vy, vz
-  start_pos: [-1.4, -2.4, 0.5] # start position x, y, z
-  goal_pos: [2.1, 1.2, 0.5] # goal position x, y, z
-  way_points: [[-1, -2, 0], [-1.0, -1.5, 0.0], [-1.0, -1.0, 0.0], [-1.0, -0.5, 0.0], [-0.5, 0.0, 0.0], [0.0, 0.0, 0.0], [0.5, 0.0, 0.0], [1.0, 0.0, 0.0], [1.0, 0.5, 0.0], [1.5, 0.5, 0.0], [2.0, 1.0, 0.0]]
+  start_pos: [-1.0, -1.2, 0] # start position x, y, z
+  goal_pos: [6.8, 3.3, 0] # goal position x, y, z
+  way_points: [[-1, -1, 0], [-0.5, -0.5, 0.0], [0.0, -0.5, 0.0], [0.5, 0.0, 0.0], [1.0, 0.0, 0.0], [1.5, 0.5, 0.5], [2.0, 1.0, 0.5], [2.5, 1.5, 0.5], [3.0, 1.5, 0.5], [3.5, 1.5, 0.5], [4.0, 1.5, 0.5], [4.5, 2.0, 0.5], [5.0, 2.0, 0.5], [5.5, 2.0, 0.5], [6.0, 2.5, 0.0], [6.5, 2.5, 0.0], [7.0, 3.0, 0.0]]
   max_detection_range: 1.0 # max obstacle detection range [m], obstacles outside this range will not be detected. The number of obstacles detected is fixed to 10, if less than 10 obstacles are within detectable range, the observation is padded with 10.0
   test_env: yes
 rewards:

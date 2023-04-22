@@ -226,7 +226,7 @@ bool VisionEnv::computeReward(Ref<Vector<>> reward) {
     pos_penalty + ori_penalty + lin_vel_penalty + ang_vel_penalty + survive_rew_;
   
   std::cout << "quad_state_.p = " << quad_state_.p.transpose() << std::endl;
-  if (test_env_ && (quad_state_.p - goal_pos_).norm() < 0.3) {
+  if (test_env_ && (quad_state_.p - goal_pos_).norm() < 0.5) {
     std::cout << "update" << std::endl;
     index = index + 1;
     std::vector<Scalar> goal_pos_vec = cfg_["environment"]["way_points"][index+1].as<std::vector<Scalar>>();
